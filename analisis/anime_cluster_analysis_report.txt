@@ -1,0 +1,93 @@
+ANIME GENRE CLUSTERING ANALYSIS REPORT
+==================================================
+
+Dataset: csv/myanimelist/anime_cleaned.csv
+Total anime: 6668
+Total genres: 43
+Number of clusters: 15
+
+Cluster Distribution:
+  Cluster 0: 566 anime (8.5%)
+  Cluster 1: 216 anime (3.2%)
+  Cluster 2: 352 anime (5.3%)
+  Cluster 3: 1192 anime (17.9%)
+  Cluster 4: 329 anime (4.9%)
+  Cluster 5: 302 anime (4.5%)
+  Cluster 6: 417 anime (6.3%)
+  Cluster 7: 1110 anime (16.6%)
+  Cluster 8: 55 anime (0.8%)
+  Cluster 9: 89 anime (1.3%)
+  Cluster 10: 1250 anime (18.7%)
+  Cluster 11: 386 anime (5.8%)
+  Cluster 12: 261 anime (3.9%)
+  Cluster 13: 102 anime (1.5%)
+  Cluster 14: 41 anime (0.6%)
+
+Genre Frequency Analysis:
+  Yuri: 10 anime (0.1%)
+  Yaoi: 28 anime (0.4%)
+  Cars: 41 anime (0.6%)
+  Dementia: 47 anime (0.7%)
+  Shounen Ai: 55 anime (0.8%)
+  Shoujo Ai: 56 anime (0.8%)
+  Josei: 67 anime (1.0%)
+  Thriller: 79 anime (1.2%)
+  Vampire: 100 anime (1.5%)
+  Samurai: 102 anime (1.5%)
+  Police: 155 anime (2.3%)
+  Game: 168 anime (2.5%)
+  Martial Arts: 193 anime (2.9%)
+  Psychological: 206 anime (3.1%)
+  Demons: 223 anime (3.3%)
+  Horror: 227 anime (3.4%)
+  Space: 247 anime (3.7%)
+  Parody: 267 anime (4.0%)
+  Harem: 276 anime (4.1%)
+  Military: 312 anime (4.7%)
+  Music: 329 anime (4.9%)
+  Hentai: 331 anime (5.0%)
+  Sports: 338 anime (5.1%)
+  Super Power: 367 anime (5.5%)
+  Kids: 406 anime (6.1%)
+  Historical: 425 anime (6.4%)
+  Mystery: 454 anime (6.8%)
+  Seinen: 470 anime (7.0%)
+  Shoujo: 489 anime (7.3%)
+  Ecchi: 506 anime (7.6%)
+  Mecha: 543 anime (8.1%)
+  Magic: 604 anime (9.1%)
+  Supernatural: 860 anime (12.9%)
+  Slice of Life: 927 anime (13.9%)
+  School: 1004 anime (15.1%)
+  Romance: 1177 anime (17.7%)
+  Shounen: 1237 anime (18.6%)
+  Sci Fi: 1318 anime (19.8%)
+  Drama: 1338 anime (20.1%)
+  Adventure: 1355 anime (20.3%)
+  Fantasy: 1441 anime (21.6%)
+  Action: 2051 anime (30.8%)
+  Comedy: 3021 anime (45.3%)
+
+Recommended genres for omission:
+  • Yuri
+  • Yaoi
+  • Cars
+  • Dementia
+  • Shounen Ai
+  • Shoujo Ai
+  • Josei
+  • Thriller
+  • Vampire
+  • Samurai
+  • Police
+  • Game
+  • Martial Arts
+  • Psychological
+  • Demons
+  • Horror
+  • Space
+  • Parody
+  • Harem
+  • Military
+  • Music
+  • Hentai
