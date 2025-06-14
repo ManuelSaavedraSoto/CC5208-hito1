@@ -17,7 +17,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sys
 import os
+import json
+import csv
 from pathlib import Path
+from datetime import datetime
 
 # Machine Learning imports
 from sklearn.preprocessing import StandardScaler
@@ -411,6 +414,94 @@ class AnimeClusterAnalyzer:
 
         print(f"Report generated: {output_file}")
 
+    def clean_and_export_data(self, output_file="csv/myanimelist/anime_cleaned_filtered.csv"):
+        """Clean the anime data by removing low-frequency genres and unwanted columns.
+        Updates the genre column instead of using bit arrays.
+        
+        Args:
+            output_file: Path to the output CSV file
+        """
+        # Get genres to remove
+        omittable_genres = self.identify_omittable_genres()
+        if not omittable_genres:
+            return False
+
+        print(f"\nRemoving {len(omittable_genres)} low-frequency genres...")
+        
+        # Create a copy of the original dataframe
+        cleaned_df = self.df.copy()
+        
+        # Columns to remove
+        columns_to_remove = [
+            "opening_theme", "ending_theme", "airing", "aired_string",
+            "background", "broadcast", "related", "licensor", "duration_min",
+            "image_url", "title_synonyms",
+            "cluster"  # Remove cluster column if it exists
+        ]
+        
+        # Drop unwanted columns
+        cleaned_df = cleaned_df.drop(columns=[col for col in columns_to_remove if col in cleaned_df.columns])
+        
+        # Filter anime based on air dates from the aired JSON column
+        if 'aired' in cleaned_df.columns:
+            
+            def get_year_from_aired(aired_json):
+                try:
+                    aired_dict = json.loads(aired_json.replace("'", '"'))
+                    from_date = aired_dict.get('from')
+                    to_date = aired_dict.get('to')
+                    
+                    if from_date:
+                        from_year = datetime.fromisoformat(from_date.replace('Z', '+00:00')).year
+                        if to_date:
+                            to_year = datetime.fromisoformat(to_date.replace('Z', '+00:00')).year
+                        else:
+                            to_year = from_year
+                            
+                        # Filter conditions:
+                        # 1. Started airing in or after 2000
+                        # 2. Not from 2018 (incomplete)
+                        if from_year >= 2000 and from_year != 2018:
+                            return True
+                    return False
+                except (json.JSONDecodeError, ValueError, AttributeError):
+                    return False
+            
+            # Apply the filter
+            original_count = len(cleaned_df)
+            cleaned_df = cleaned_df[cleaned_df['aired'].apply(get_year_from_aired)]
+            removed_count = original_count - len(cleaned_df)
+            print(f"\nRemoved {removed_count} anime that aired before 2000 or in 2018")
+        
+        # Update the genres column by removing omitted genres
+        if 'genres' in cleaned_df.columns:
+            def filter_genres(genre_string):
+                if pd.isna(genre_string):
+                    return ""
+                genres = genre_string.split(',')
+                filtered_genres = [g.strip() for g in genres if g.strip() not in omittable_genres]
+                return ','.join(filtered_genres)
+            
+            cleaned_df['genres'] = cleaned_df['genres'].apply(filter_genres)
+            
+            # Remove rows with no remaining genres
+            cleaned_df = cleaned_df[cleaned_df['genres'] != ""]
+        
+        # Drop all the genre_* columns
+        genre_cols = [col for col in cleaned_df.columns if col.startswith('genre_')]
+        cleaned_df = cleaned_df.drop(columns=genre_cols)
+        
+        # Export to CSV
+        cleaned_df.to_csv(output_file, index=False)
+        
+        print(f"\nCleaned data exported to: {output_file}")
+        print(f"Removed genres: {', '.join(omittable_genres)}")
+        print(f"Removed columns: {', '.join(columns_to_remove)}")
+        print(f"Original rows: {len(self.df)}")
+        print(f"Remaining rows: {len(cleaned_df)}")
+        print(f"Removed {len(self.df) - len(cleaned_df)} anime that had no remaining genres")
+        return True
+
 
 def main():
     """Main function to run the analysis."""
@@ -475,6 +566,10 @@ def main():
     # Generate report
     print("\nGenerating report...")
     analyzer.generate_report()
+
+    # Clean and export data
+    print("\nCleaning and exporting filtered data...")
+    analyzer.clean_and_export_data()
 
 if __name__ == "__main__":
     main()
